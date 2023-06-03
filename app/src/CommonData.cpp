@@ -12,21 +12,3 @@ RectUV::RectUV () : topRight(), topLeft(), bottomRight(), bottomLeft()
 {
 
 }
-
-
-block::FACE block::GLMVecToFACE(glm::vec3 direction)
-{
-    for (size_t i = 0; i < 3; i++)
-    {
-        
-        if(direction[i] != 0)
-        {
-            if(direction[i] < 0)
-                return (block::FACE) (i+3);
-            else
-                return (block::FACE) (i);
-        }
-    }
-
-    return block::FACE::FNZ;
-}

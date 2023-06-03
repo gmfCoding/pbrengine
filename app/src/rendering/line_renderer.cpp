@@ -8,7 +8,7 @@
 #include "Material.hpp"
 #include "Camera.hpp"
 
-
+#include "engine.hpp"
 
 LineRenderer::LineRenderer(Material* pMaterial, Transform* trans, bool pDynamic) : material(pMaterial), dynamic{pDynamic}, properties{pMaterial->defaults}, transform{trans}
 {
@@ -50,7 +50,7 @@ void LineRenderer::Upload()
 void LineRenderer::Render() 
 {
     glUseProgram(material->programID);
-    auto camera = App::instance->camera;
+    auto camera = Engine::Get()->camera;
 	glm::mat4 mvp = camera->projection * camera->view * this->transform->transform;
     GLuint uniTransform = glGetUniformLocation(material->programID, "MVP");
     glUniformMatrix4fv(uniTransform, 1, GL_FALSE,  glm::value_ptr(mvp));

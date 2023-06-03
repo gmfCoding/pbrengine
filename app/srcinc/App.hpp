@@ -1,33 +1,22 @@
 #include "PlayerMove.hpp"
+#include "BaseApp.hpp"
+class GizmoLine;
+class PrimitiveCube;
 
-
-class Camera;
-class PlayerController;
-class PostProcessing;
-class PostprocessEffect;
-
-class App
+class ExampleApp : public BaseApp
 {
-    public:
-    static App* instance;
+public:
+	GizmoLine* line1;
+	GizmoLine* line2;
+	GizmoLine* line3;
+    PrimitiveCube* prim_cube;
 
-    PlayerMove playerMove{};
-    Camera* camera;
-    PlayerController* playerController;
+    ExampleApp();
 
-    PostProcessing* postprocess;
-    PostprocessEffect* underwater_effect;
+	void Setup() override;
+	void RenderingBegin() override;
 
-    int* width;
-    int* height;
+	void RenderingEnd() override;
+	void Update() override;
 
-    App();
-
-    void Start();
-    void SetupPostProcessing();
-
-    void Update();  
-
-    void RenderingBegin();
-    void RenderingEnd();
 };

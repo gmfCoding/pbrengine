@@ -12,25 +12,5 @@ public:
     PrimitiveCube(/* args */);
     ~PrimitiveCube();
 
-    void Render()
-    {
-        Renderer::RenderObject(this);
-    }
-
+	void Render();
 };
-
-PrimitiveCube::PrimitiveCube(/* args */)
-{
-    renderer = new MeshRenderer("basic");
-
-    BoxMeshGen* bmg = new BoxMeshGen();
-    mesh = bmg->generate();
-    renderer->Bind(&mesh);
-
-    delete bmg;
-}
-
-PrimitiveCube::~PrimitiveCube()
-{
-    delete renderer;
-}

@@ -1,7 +1,9 @@
 #pragma once
+#include <LoadGlad.h>
 #include <map>
 #include <string>
-#include "LoadGlad.h"
+#include <GL/gl.h>
+
 #include "fileio.hpp"
 
 #include "Mesh.hpp"
