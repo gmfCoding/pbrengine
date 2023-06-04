@@ -2,7 +2,7 @@
 #include "MaterialSystem.hpp"
 #include <map>
 #include <any>
-#include "LoadGlad.h"
+#include "glad.h"
 
 void Material::Setup() {
 

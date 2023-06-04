@@ -1,7 +1,7 @@
 #ifndef GIZMO3D_H
 #define GIZMO3D_H
 #include "Object.hpp"
-#include "LoadGlad.h"
+#include "glad.h"
 #include <vector>
 class Camera;
 

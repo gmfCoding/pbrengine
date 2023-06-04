@@ -1,8 +1,7 @@
 #pragma once
-#include <LoadGlad.h>
+#include <glad.h>
 #include <map>
 #include <string>
-#include <GL/gl.h>
 
 #include "fileio.hpp"
 

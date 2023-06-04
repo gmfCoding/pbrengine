@@ -1,7 +1,7 @@
 #ifndef TEXTUREMANAGER_INCLUDE_H
 #define TEXTUREMANAGER_INCLUDE_H
 
-#include "LoadGlad.h"
+#include "glad.h"
 #include "gmfc_image.hpp"
 #include <map>
 #include <set>

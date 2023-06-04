@@ -6,7 +6,7 @@
 #include "engine.hpp"
 #include "Material.hpp"
 #include "fileio.hpp"
-#include "LoadGlad.h"
+#include "glad.h"
 #include "Postprocess.hpp"
 
 PostprocessEffect::PostprocessEffect(const std::string& pName) : name(pName)

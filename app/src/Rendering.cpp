@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
-#include "LoadGlad.h"
+#include "glad.h"
 
 
 #include "gldebug.hpp"

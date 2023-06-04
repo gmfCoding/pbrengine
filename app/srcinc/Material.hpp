@@ -4,7 +4,7 @@
 #include <map>
 #include <any>
 
-#include "LoadGlad.h"
+#include "glad.h"
 
 class MaterialProperties
 {

@@ -2,7 +2,7 @@
 #include <map>
 #include <string>
 
-#include "LoadGlad.h"
+#include "glad.h"
 
 #include "fileio.hpp"
 #include "gmfc_image.hpp"

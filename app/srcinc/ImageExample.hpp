@@ -1,4 +1,4 @@
-#include <LoadGlad.h>
+#include <glad.h>
 #include <string>
 #include <vector>
 #include <glm.hpp>

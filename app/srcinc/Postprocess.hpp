@@ -3,7 +3,7 @@
 #include <iostream>
 #include <glm/vec4.hpp>
 
-#include "LoadGlad.h"
+#include "glad.h"
 #include "Material.hpp"
 
 class PostprocessEffect
