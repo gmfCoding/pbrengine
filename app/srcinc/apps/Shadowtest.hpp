@@ -1,17 +1,15 @@
 #include "PlayerMove.hpp"
 #include "BaseApp.hpp"
+
+class Object;
 class GizmoLine;
 class PrimitiveCube;
 
-class ExampleApp : public BaseApp
+class ShadowtestApp : public BaseApp
 {
 public:
-	GizmoLine* line1;
-	GizmoLine* line2;
-	GizmoLine* line3;
-    PrimitiveCube* prim_cube;
-
-    ExampleApp();
+	Object* crate;
+    ShadowtestApp();
 
 	void Setup() override;
 	void RenderingBegin() override;

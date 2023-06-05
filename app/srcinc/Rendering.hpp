@@ -9,6 +9,7 @@
 #include "Camera.hpp"
 
 class Object;
+class Material;
 
 struct MeshRenderer
 {
@@ -18,14 +19,12 @@ struct MeshRenderer
     GLuint texture;
     Mesh* m_mesh;
     GLsizei m_size;
-    const std::string& materialName;
-    Shader* shader;
 
-    MeshRenderer(const std::string& material) : materialName(material), m_size(0), texture(0), vao_gen(false), vbo_gen(false), ibo_gen(false)
-    {
+    Material* material;
 
-    }
+	Object &object;
 
+    MeshRenderer(Material *pMaterial, Object &obj);
     void Render();
     void SetVertices(Mesh* mesh, int vao, int vbo);
     void SetIndices(Mesh* mesh, int vao, int ibo, int* size, bool dynamic);
@@ -49,8 +48,6 @@ class Shader {
 class Renderer {
     public:
     static Camera* camera;
-    
-    static void RenderObject(const Object* object);
 };
 
 using Index = unsigned int;

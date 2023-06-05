@@ -29,8 +29,8 @@
 #include "ImageExample.hpp"
 
 
-#include "App.hpp"
-
+#include "apps/ExampleApp.hpp"
+#include "apps/Shadowtest.hpp"
 #include "Postprocess.hpp"
 
 #include "GizmoLine.hpp"
@@ -53,5 +53,6 @@ int main(int argc, char **argv)
 {
     Engine engine = Engine();
 	engine.apps.emplace("example", new ExampleApp());
+	engine.apps.emplace("shadowtest", new ShadowtestApp());
     return engine.Intialise();
 }

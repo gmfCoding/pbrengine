@@ -1,3 +1,4 @@
+#pragma once
 #include "PlayerMove.hpp"
 
 class Camera;

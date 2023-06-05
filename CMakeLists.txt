@@ -21,7 +21,10 @@ add_subdirectory(app/vendor/other)
 # Populates SOURCES with the src files defined in app/src/CMakeLists.txt 
 add_subdirectory(app/src)
 
+
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
+
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE GLM_FORCE_XYZW_ONLY)
 
 target_include_directories(${CMAKE_PROJECT_NAME}
     PRIVATE 

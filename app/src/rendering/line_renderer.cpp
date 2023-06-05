@@ -3,20 +3,20 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "rendering/line_renderer.hpp"
-#include "App.hpp"
+#include "BaseApp.hpp"
 #include "MaterialSystem.hpp"
 #include "Material.hpp"
 #include "Camera.hpp"
 
 #include "engine.hpp"
 
-LineRenderer::LineRenderer(Material* pMaterial, Transform* trans, bool pDynamic) : material(pMaterial), dynamic{pDynamic}, properties{pMaterial->defaults}, transform{trans}
+LineRenderer::LineRenderer(Material* pMaterial, Transform* trans, bool pDynamic) : material(pMaterial), dynamic{pDynamic}, properties{pMaterial->properties}, transform{trans}
 {
 
 }
 
 
-LineRenderer::LineRenderer(Material* pMaterial, bool pDynamic) : material(pMaterial), dynamic{pDynamic}, properties{pMaterial->defaults}, transform{new Transform()}
+LineRenderer::LineRenderer(Material* pMaterial, bool pDynamic) : material(pMaterial), dynamic{pDynamic}, properties{pMaterial->properties}, transform{new Transform()}
 {
 
 }

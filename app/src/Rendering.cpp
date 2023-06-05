@@ -18,23 +18,29 @@
 
 Camera* Renderer::camera;
 
-void Renderer::RenderObject(const Object* object)
-{    
-    MeshRenderer* renderer = object->renderer;
-    auto program = MaterialSystem::materialMap["default"]->programID;
+// void Renderer::RenderObject(const Object* object)
+// {    
+//     MeshRenderer* renderer = object->renderer;
+//     auto program = MaterialSystem::materialMap[renderer->materialName]->programID;
 
-    GLCall(glUseProgram(program));
+//     GLCall(glUseProgram(program));
     
-    GLCall(GLuint uniColour = glGetUniformLocation(program, "col_uni"));
-    GLCall(glUniform4fv(uniColour, 1, &(object->colour).x));
+//     GLCall(GLuint uniColour = glGetUniformLocation(program, "col_uni"));
+//     GLCall(glUniform4fv(uniColour, 1, &(object->colour).x));
 
-    glm::mat4 mvp = camera->preMultPV * object->GetTransform();
+//     glm::mat4 mvp = camera->preMultPV * object->GetTransform();
 
-    GLCall(GLuint uniTransform = glGetUniformLocation(program, "transform"));
-    GLCall(glUniformMatrix4fv(uniTransform, 1, GL_FALSE,  glm::value_ptr(mvp)))
+//     GLCall(GLuint uniTransform = glGetUniformLocation(program, "MVP"));
+//     GLCall(glUniformMatrix4fv(uniTransform, 1, GL_FALSE,  glm::value_ptr(mvp)))
 
-    GLCall(glBindVertexArray(renderer->m_vao));
-    GLCall(glDrawElements(GL_TRIANGLES, renderer->m_size, GL_UNSIGNED_INT, nullptr));
+//     GLCall(glBindVertexArray(renderer->m_vao));
+//     GLCall(glDrawElements(GL_TRIANGLES, renderer->m_size, GL_UNSIGNED_INT, nullptr));
+// }
+
+
+MeshRenderer::MeshRenderer(Material *pMaterial, Object &obj) : material(pMaterial), object(obj), m_size(0), texture(0), vao_gen(false), vbo_gen(false), ibo_gen(false)
+{
+		
 }
 
 void MeshRenderer::Bind(Mesh* mesh)    {
@@ -53,7 +59,6 @@ void MeshRenderer::Bind(Mesh* mesh)    {
 
     SetVertices(mesh, m_vao, m_vbo);
     SetIndices(mesh, m_vao, m_ibo, &m_size, false);
-
 
     GLCall(glBindVertexArray(0));
 }
@@ -93,7 +98,6 @@ void MeshRenderer::SetVertices(Mesh* mesh, int vao = -1, int vbo = -1)
     }
 }
 
-
 void MeshRenderer::SetIndices(Mesh* mesh, int vao = -1, int ibo = -1, int* size = nullptr, bool dynamic = false)
 {
     if(vao == -1)
@@ -122,5 +126,32 @@ void MeshRenderer::SetIndices(Mesh* mesh, int vao = -1, int ibo = -1, int* size 
 
 void MeshRenderer::Render()
 {
+    auto program = material->programID;
 
+    GLCall(glUseProgram(program));
+
+	MaterialSystem::ApplyMaterial(object, material);
+	
+    GLCall(glBindVertexArray(m_vao));
+    GLCall(glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, nullptr));
+
+	// Material* mat = MaterialSystem::materialMap[materialName];
+
+    // auto program = mat->programID;
+    // GLCall(glUseProgram(program));
+    // GLCall(GLuint uniTransform = glGetUniformLocation(program, "MVP"));
+    
+    // glm::mat4 mvp = Renderer::camera->preMultPV;
+
+    // GLCall(glUniformMatrix4fv(uniTransform, 1, GL_FALSE,  glm::value_ptr(mvp)));
+    // GLCall(glBindVertexArray(m_vao));
+    // GLCall(glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, nullptr));
+
+    // // if(mode)
+    // //     glEnable(GL_CULL_FACE);
+
+    // // Unbind the VAO, VBO, and IBO
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

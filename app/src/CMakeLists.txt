@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 set(LSOURCE 
 main.cpp
-ExampleApp.cpp
+apps/ExampleApp.cpp
+apps/Shadowtest.cpp
 Camera.cpp
 engine.cpp
 Input.cpp
@@ -24,6 +25,8 @@ rendering/line_renderer.cpp
 rendering/aabb_renderer.cpp
 typeutil/PrimitiveCube.cpp
 typeutil/AABBWireframe.cpp
+util/Model.cpp
+util/ModelImporter.cpp
 physics/staticbody.cpp
 physics/collision_system.cpp
 physics/physdata.cpp

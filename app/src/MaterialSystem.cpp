@@ -5,12 +5,13 @@
 #include "MaterialSystem.hpp"
 #include "fileio.hpp"
 #include "gldebug.hpp"
+#include "Object.hpp"
 
 
 std::map<std::string, Material*> MaterialSystem::materialMap = std::map<std::string, Material*>();
+
 void MaterialSystem::AddMaterial(Material* material)
 {
-    
     if(materialMap.count(material->materialName) > 1)
         std::cout << "Warning: MaterialShader redefinition: " << material->materialName << std::endl;
     else
@@ -39,7 +40,6 @@ GLuint MaterialSystem::CreateFragProgram(const std::string& fragmentPath)
     DebugProgramInfo(program);
 
     GLCall(glDeleteShader(fragShader));
-
     return program;
 }
 
@@ -54,7 +54,6 @@ GLuint MaterialSystem::CreateVFProgram(const std::string& vertexPath, const std:
     GLCall(glLinkProgram(program));
 
     DebugProgramInfo(program);
-
 
     GLCall(glDeleteShader(vertShader));
     GLCall(glDeleteShader(fragShader));
@@ -81,4 +80,29 @@ void MaterialSystem::DebugProgramInfo(GLuint program)
     std::vector<char> programError( (logLength > 1) ? logLength : 1 );
     glGetProgramInfoLog(program, logLength, NULL, &programError[0]);
     std::cout << programError.data();
+}
+
+
+Material *MaterialSystem::Get(const std::string &name)
+{
+	return materialMap[name];
+}
+
+
+Material * MaterialSystem::Copy(const std::string &name)
+{
+	return new Material(*Get(name));
+}
+
+#include "Rendering.hpp"
+
+void MaterialSystem::ApplyMaterial(Object &object, Material *material)
+{
+	material->properties.ApplyExtrinsic("MVP", Renderer::camera->preMultPV);
+	material->properties.ApplyExtrinsic("FRAME", 0);
+
+	for (auto &&i : material->properties.properties)
+	{
+		
+	}
 }

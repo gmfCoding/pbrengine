@@ -90,5 +90,16 @@
 		"stop_token": "cpp",
 		"thread": "cpp",
 		"postprocess.hpp": "c"
-	}
+	},
+	"[cmake]": {
+		"editor.quickSuggestions": {
+		  "other": "off",
+		  "comments": "off",
+		  "strings": "off"
+		},
+		"editor.inlineSuggest.enabled": false,
+		"editor.acceptSuggestionOnEnter": "off"
+	},
+	"C_Cpp.errorSquiggles": "disabled",
+	
 }

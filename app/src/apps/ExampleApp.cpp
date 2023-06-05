@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <glm/gtx/transform.hpp>
 
-#include "App.hpp"
+#include "apps/ExampleApp.hpp"
 #include "Rendering.hpp"
 #include "PlayerController.hpp"
 #include "Postprocess.hpp"

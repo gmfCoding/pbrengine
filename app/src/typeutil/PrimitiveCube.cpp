@@ -2,7 +2,7 @@
 
 PrimitiveCube::PrimitiveCube(/* args */)
 {
-    renderer = new MeshRenderer("basic");
+    renderer = new MeshRenderer(MaterialSystem::Copy("basic"), *this);
 
     BoxMeshGen* bmg = new BoxMeshGen();
     mesh = bmg->generate();
@@ -18,5 +18,5 @@ PrimitiveCube::~PrimitiveCube()
 
 void PrimitiveCube::Render()
 {
-	Renderer::RenderObject(this);
+	this->renderer->Render();
 }

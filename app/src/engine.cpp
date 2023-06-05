@@ -49,18 +49,26 @@ void Engine::engine_key_callback(GLFWwindow* window, int key, int scancode, int 
 
 void Engine::LoadMaterials()
 {
-	auto basic = new VertexFragmentCombinationMaterial("basic",          getAssetPath({"shaders", "basic_vertex.shader"}),   getAssetPath({"shaders", "basic_fragment.shader"}));
-	basic->defaults.properties["color"] = glm::vec3(1,1,1);
-	
-	new VertexFragmentCombinationMaterial("alt_textured",   getAssetPath({"shaders", "alt_tex_vertex.shader"}), getAssetPath({"shaders", "alt_tex_fragment.shader"}));
-	auto alttexdebug = new VertexFragmentCombinationMaterial("alt_textured_debug",   getAssetPath({"shaders", "alt_tex_vertex_debug.shader"}), getAssetPath({"shaders", "alt_tex_fragment_debug.shader"}));
-	alttexdebug->defaults.properties["dsp"] = false;
-	new VertexFragmentCombinationMaterial("default",        getAssetPath({"shaders", "vertex.shader"}),         getAssetPath({"shaders", "fragment.shader"}));
-	auto postfx = new VertexFragmentCombinationMaterial("postfx", getAssetPath({"shaders", "vertex_uv.shader"}), getAssetPath({"shaders", "postfx", "hueshift.shader"}));
-	postfx->defaults.properties["hueShift"] = 0.0f;
+	auto mat = new VertexFragmentCombinationMaterial("basic",          getAssetPath({"shaders", "basic_vertex.shader"}),   getAssetPath({"shaders", "basic_fragment.shader"}));
+	mat->CreateProperties(
+		{ {"color", Matprop::FLOAT3, glm::vec3(0.0)} },
+		{ {"MVP", Matprop::MAT4, glm::mat4(1)} });
 
-	auto postfx_fxaa = new VertexFragmentCombinationMaterial("postfx_fxaa", getAssetPath({"shaders", "vertex_uv.shader"}), getAssetPath({"shaders", "postfx", "fxaa.shader"}));
-	postfx_fxaa->defaults.properties["hueShift"] = 0.0f;
+	new VertexFragmentCombinationMaterial("alt_textured", getAssetPath({"shaders", "alt_tex_vertex.shader"}), getAssetPath({"shaders", "alt_tex_fragment.shader"}));
+	mat = new VertexFragmentCombinationMaterial("alt_textured_debug", getAssetPath({"shaders", "alt_tex_vertex_debug.shader"}), getAssetPath({"shaders", "alt_tex_fragment_debug.shader"}));
+	mat->CreateProperties(
+		{ {"dspUV", Matprop::BOOL, false} },
+		{ {"MVP", Matprop::MAT4, glm::mat4(1)} });
+	
+	new VertexFragmentCombinationMaterial("default", getAssetPath({"shaders", "vertex.shader"}), getAssetPath({"shaders", "fragment.shader"}));
+	mat = new VertexFragmentCombinationMaterial("postfx", getAssetPath({"shaders", "vertex_uv.shader"}), getAssetPath({"shaders", "postfx", "hueshift.shader"}));
+	mat->CreateProperties({
+		{"hueShift", Matprop::FLOAT1, 0.0f}
+	}, {});
+	mat = new VertexFragmentCombinationMaterial("postfx_fxaa", getAssetPath({"shaders", "vertex_uv.shader"}), getAssetPath({"shaders", "postfx", "fxaa.shader"}));
+	mat->CreateProperties({
+		{"hueShift", Matprop::FLOAT1, 0.0f}
+	}, {});
 }
 
 BaseApp* Engine::Get()
@@ -213,7 +221,7 @@ void Engine::ImGUIExample()
 		ImGui::Begin("Information", &gui_show_information);
 		
 		Material* mat = MaterialSystem::materialMap["alt_textured_debug"];
-		bool &dsp = mat->defaults.GetValueRef<bool>("dsp");
+		bool &dsp = mat->properties.GetValueRef<bool>("dspUV");
 		ImGui::Checkbox("DSP:", &dsp);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
