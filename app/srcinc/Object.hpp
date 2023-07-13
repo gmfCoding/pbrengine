@@ -14,7 +14,6 @@ class Mesh;
 class Object {
 public:
     char* name;
-    Mesh* mesh;
 
     glm::vec4 colour;
 

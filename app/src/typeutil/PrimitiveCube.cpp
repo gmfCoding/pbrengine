@@ -1,13 +1,12 @@
 #include "Cube.hpp"
+#include "gpu_mesh.hpp"
 
 PrimitiveCube::PrimitiveCube(/* args */)
 {
-    renderer = new MeshRenderer(MaterialSystem::Copy("basic"), *this);
-
-    BoxMeshGen* bmg = new BoxMeshGen();
+	BoxMeshGen* bmg = new BoxMeshGen();
     mesh = bmg->generate();
-    renderer->Bind(&mesh);
 
+    renderer = new MeshRenderer(MaterialSystem::Copy("basic"), *this, new GPUMesh(&mesh));
     delete bmg;
 }
 

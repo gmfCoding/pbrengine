@@ -1,10 +1,11 @@
 #include "Mesh.hpp"
 #include <vector>
 #include <algorithm>
+#include "render_data.hpp"
 
 void Mesh::CameraSort(glm::vec3 cameraPos)
 {
-    std::vector<std::pair<float, unsigned int>> triangleDistances;
+    std::vector<std::pair<float, GPUIndex>> triangleDistances;
 
     for (unsigned int i = 0; i < indices.size(); i += 3) {
         // Calculate the centroid of the triangle
@@ -24,7 +25,7 @@ void Mesh::CameraSort(glm::vec3 cameraPos)
     std::sort(triangleDistances.begin(), triangleDistances.end());
     
     // Reorder the triangles in the mesh based on the sorted distances
-    std::vector<unsigned short> sortedIndices;
+    std::vector<GPUIndex> sortedIndices;
     sortedIndices.reserve(this->indices.size());
 
     for (const auto& p : triangleDistances) {

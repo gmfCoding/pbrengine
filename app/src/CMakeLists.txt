@@ -21,6 +21,10 @@ CommonData.cpp
 transform.cpp
 BaseApp.cpp
 post_process.cpp
+gpu_mesh.cpp
+GPUManager.cpp
+
+entities/light_source.cpp
 rendering/line_renderer.cpp
 rendering/aabb_renderer.cpp
 typeutil/PrimitiveCube.cpp

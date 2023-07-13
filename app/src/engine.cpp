@@ -15,6 +15,7 @@
 #include "rendering/aabb_renderer.hpp"
 #include "Postprocess.hpp"
 #include "PlayerController.hpp"
+#include "material/DefaultMaterials.hpp"
 
 #define def_getcursorposfun
 typedef void (* getcursorposfun)(GLFWwindow*, double*,double*);
@@ -69,6 +70,18 @@ void Engine::LoadMaterials()
 	mat->CreateProperties({
 		{"hueShift", Matprop::FLOAT1, 0.0f}
 	}, {});
+
+	mat = new VertexFragmentCombinationMaterial("lit", getAssetPath({"shaders", "lit_vertex.shader"}), getAssetPath({"shaders", "lit_fragment.shader"}));
+	mat->CreateProperties(
+		{	
+			{"objectColor", Matprop::FLOAT3, glm::vec3()}, 
+			{"lightColor", Matprop::FLOAT3, glm::vec3(1.0, 1.0, 1.0)},
+			{"lightPos", Matprop::FLOAT3, glm::vec3(1.0)}
+		},
+		{ MATP_MVP_SPLIT, MATP_VIEWPOS });
+
+	mat = new VertexFragmentCombinationMaterial("lit_source", getAssetPath({"shaders", "lit_vertex.shader"}), getAssetPath({"shaders", "lit_src_fragment.shader"}));
+	mat->CreateProperties({ }, { MATP_MVP_SPLIT });
 }
 
 BaseApp* Engine::Get()

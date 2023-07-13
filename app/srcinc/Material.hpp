@@ -43,6 +43,11 @@ struct Matprop
         return std::any_cast<T&>(value);
     }
 
+	void SetValue(std::any p_value)
+	{
+		value = p_value;
+	}
+
 	void Apply();
 	void ApplyOverride(std::any value);
 };
@@ -85,6 +90,13 @@ class MaterialProperties
             return *val;
 		}
         return it->second.GetValueRef<T>();
+    }
+
+    void SetValue(const std::string& name, std::any value)
+    {
+        std::map<std::string, Matprop>::iterator it = this->properties.find(name);
+		if(it != this->properties.end())
+			it->second.SetValue(value);
     }
 
 	void ApplyOnlyExist(const std::string& name, std::any val)

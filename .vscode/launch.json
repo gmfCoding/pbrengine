@@ -12,7 +12,7 @@
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}/build",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "gdb",
             "program": "",
             "setupCommands": [

@@ -10,11 +10,13 @@
 #include "fileio.hpp"
 #include "AtulPwd.hpp"
 
+#define RENDER_DATA_ALL
 #include "Rendering.hpp"
 #include "Object.hpp"
 #include "Camera.hpp"
 
 #include "MaterialSystem.hpp"
+#include "gpu_mesh.hpp"
 
 Camera* Renderer::camera;
 
@@ -38,91 +40,91 @@ Camera* Renderer::camera;
 // }
 
 
-MeshRenderer::MeshRenderer(Material *pMaterial, Object &obj) : material(pMaterial), object(obj), m_size(0), texture(0), vao_gen(false), vbo_gen(false), ibo_gen(false)
+MeshRenderer::MeshRenderer(Material *pMaterial, Object &obj, GPUMesh* gpumesh) : material(pMaterial), object(obj), m_size(0), texture(0), vao_gen(false), vbo_gen(false), ibo_gen(false), m_mesh(gpumesh)
 {
 		
 }
 
-void MeshRenderer::Bind(Mesh* mesh)    {
-    bool hasUVs = mesh->uvs.size() >= 1 && mesh->uvs.size() == mesh->vertices.size();
+// void MeshRenderer::Bind(Mesh* mesh)    {
+//     bool hasUVs = mesh->uvs.size() >= 1 && mesh->uvs.size() == mesh->vertices.size();
 
-    if(vao_gen == false) 
-    {
-        vao_gen = true;
-        GLCall(glGenVertexArrays(1, &m_vao)); // Vertex  Array  Object
-        GLCall(glGenBuffers(1, &m_vbo)); // Vertex  Buffer Object (temp)
-        GLCall(glGenBuffers(1, &m_ibo)); // Element Buffer Object (temp)
-    }
+//     if(vao_gen == false) 
+//     {
+//         vao_gen = true;
+//         GLCall(glGenVertexArrays(1, &m_vao)); // Vertex  Array  Object
+//         GLCall(glGenBuffers(1, &m_vbo)); // Vertex  Buffer Object (temp)
+//         GLCall(glGenBuffers(1, &m_ibo)); // Element Buffer Object (temp)
+//     }
 
-    GLCall(glBindVertexArray(m_vao));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+//     GLCall(glBindVertexArray(m_vao));
+//     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
 
-    SetVertices(mesh, m_vao, m_vbo);
-    SetIndices(mesh, m_vao, m_ibo, &m_size, false);
+//     SetVertices(mesh, m_vao, m_vbo);
+//     SetIndices(mesh, m_vao, m_ibo, &m_size, false);
 
-    GLCall(glBindVertexArray(0));
-}
+//     GLCall(glBindVertexArray(0));
+// }
 
-void MeshRenderer::SetVertices(Mesh* mesh, int vao = -1, int vbo = -1)
-{
-    if(vao == -1)
-        vao = this->m_vao;
-    if(vbo == -1)
-        vbo = this->m_vbo;
+// void MeshRenderer::SetVertices(Mesh* mesh, int vao = -1, int vbo = -1)
+// {
+//     if(vao == -1)
+//         vao = this->m_vao;
+//     if(vbo == -1)
+//         vbo = this->m_vbo;
         
-    GLCall(glBindVertexArray(vao));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+//     GLCall(glBindVertexArray(vao));
+//     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
     
-    // Contains UV's
-    if(mesh->uvs.size() >= 1 && mesh->uvs.size() == mesh->vertices.size())
-    {
-        std::vector<Vertex> vertices_uv;
-        for (size_t i = 0; i < mesh->vertices.size(); i++)
-        {
-            vertices_uv.push_back({mesh->vertices[i], mesh->uvs[i]});
-        }
-        GLCall(glBufferData(GL_ARRAY_BUFFER, vertices_uv.size() * sizeof(Vertex), vertices_uv.data(), GL_STATIC_DRAW)); 
-        // Location of position
-        GLCall(glEnableVertexAttribArray(0));
-        GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0));
-        // Location of Texcoords
-        GLCall(glEnableVertexAttribArray(1));
-        GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<const void*>(offsetof(Vertex, texcoord))));
-    }
-    // No UV's
-    else
-    {
-        GLCall(glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(glm::vec3), mesh->vertices.data(), GL_STATIC_DRAW));
-        GLCall(glEnableVertexAttribArray(0));
-        GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0));
-    }
-}
+//     // Contains UV's
+//     if(mesh->uvs.size() >= 1 && mesh->uvs.size() == mesh->vertices.size())
+//     {
+//         std::vector<GPUVertex> vertices_uv;
+//         for (size_t i = 0; i < mesh->vertices.size(); i++)
+//         {
+//             vertices_uv.push_back({mesh->vertices[i], mesh->uvs[i]});
+//         }
+//         GLCall(glBufferData(GL_ARRAY_BUFFER, vertices_uv.size() * sizeof(GPUVertex), vertices_uv.data(), GL_STATIC_DRAW)); 
+//         // Location of position
+//         GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GPUVertex), 0));
+//         GLCall(glEnableVertexAttribArray(0));
+//         // Location of Texcoords
+//         GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GPUVertex), reinterpret_cast<const void*>(offsetof(GPUVertex, texcoord))));
+//         GLCall(glEnableVertexAttribArray(1));
+//     }
+//     // No UV's
+//     else
+//     {
+//         GLCall(glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(glm::vec3), mesh->vertices.data(), GL_STATIC_DRAW));
+//         GLCall(glEnableVertexAttribArray(0));
+//         GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0));
+//     }
+// }
 
-void MeshRenderer::SetIndices(Mesh* mesh, int vao = -1, int ibo = -1, int* size = nullptr, bool dynamic = false)
-{
-    if(vao == -1)
-        vao = this->m_vao;
-    if(ibo == -1)
-        ibo = this->m_ibo;
-    if(size == nullptr)
-        size = &this->m_size;
+// void MeshRenderer::SetIndices(Mesh* mesh, int vao = -1, int ibo = -1, int* size = nullptr, bool dynamic = false)
+// {
+//     if(vao == -1)
+//         vao = this->m_vao;
+//     if(ibo == -1)
+//         ibo = this->m_ibo;
+//     if(size == nullptr)
+//         size = &this->m_size;
 
-    GLCall(glBindVertexArray(vao));
+//     GLCall(glBindVertexArray(vao));
 
-    std::vector<Index> indices;
+//     std::vector<GPUIndex> indices;
 
-    for(auto i : mesh->indices)
-    {
-        indices.push_back(i);
-    }
+//     for(auto i : mesh->indices)
+//     {
+//         indices.push_back(i);
+//     }
 
-    *size = indices.size();
+//     *size = indices.size();
 
-    // NOTE: Do we need a currently bound vao to buffer/bind the ibo?
-    // Fill the currently bound GL_ELEMENT_ARRAY_BUFFER buffer (ibo) with the data in indices
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(Index), indices.data(), dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW));
-}
+//     // NOTE: Do we need a currently bound vao to buffer/bind the ibo?
+//     // Fill the currently bound GL_ELEMENT_ARRAY_BUFFER buffer (ibo) with the data in indices
+//     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+//     GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GPUIndex), indices.data(), dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW));
+// }
 
 void MeshRenderer::Render()
 {
@@ -131,9 +133,9 @@ void MeshRenderer::Render()
     GLCall(glUseProgram(program));
 
 	MaterialSystem::ApplyMaterial(object, material);
-	
-    GLCall(glBindVertexArray(m_vao));
-    GLCall(glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, nullptr));
+	auto spec = this->m_mesh->GetSpec();
+	GLCall(glBindVertexArray(spec.vao));
+    GLCall(glDrawElements(GL_TRIANGLES, spec.ibo_size, GL_UNSIGNED_INT, nullptr));
 
 	// Material* mat = MaterialSystem::materialMap[materialName];
 

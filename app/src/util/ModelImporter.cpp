@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "util/ModelImporter.hpp"
+#include "render_data.hpp"
 
 Model* ModelImporter::LoadModel(const char* fileLocation)
 {
@@ -44,7 +45,7 @@ Model* ModelImporter::LoadModel(const char* fileLocation)
 		}
 		else if (strcmp(lineHeader, "f") == 0) {
 			static std::string vertex1, vertex2, vertex3;
-			static unsigned short vertexIndex[3], uvIndex[3], normalIndex[3];
+			static GPUIndex vertexIndex[3], uvIndex[3], normalIndex[3];
 						
 			int matches = fscanf(file, "%u/%u/%u %u/%u/%u %u/%u/%u\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
 			if (matches != 9) {
@@ -53,6 +54,10 @@ Model* ModelImporter::LoadModel(const char* fileLocation)
 			}
 			else
 			{
+				vertexToNormal.emplace(vertexIndex[0], normalIndex[0]);
+				vertexToNormal.emplace(vertexIndex[1], normalIndex[1]);
+				vertexToNormal.emplace(vertexIndex[2], normalIndex[2]);
+
 				vertexIndices.push_back(vertexIndex[0]);
 				vertexIndices.push_back(vertexIndex[1]);
 				vertexIndices.push_back(vertexIndex[2]);
@@ -72,8 +77,26 @@ Model* ModelImporter::LoadModel(const char* fileLocation)
 	{
 		vertexIndices[i] -= 1;
 	}
-
 	model->vertices = temp_vertices;
 	model->indices = vertexIndices;
+	if (normalIndices.size() > 0)
+		model->hasNormals = true;
+	if (temp_normals.size() == model->indices.size())
+	{
+		Model flat = model->CreateFlattened();
+		for (size_t i = 0; i < normalIndices.size(); i++)
+		{
+			flat.normals.push_back(temp_normals[normalIndices[i] - 1]);
+		}
+		delete model;
+		return new Model(flat);
+	}
+	if (model->hasNormals)
+	{
+		for (size_t i = 0; i < model->vertices.size(); i++)
+		{
+			model->normals.push_back(temp_normals[this->vertexToNormal[i + 1] - 1]);
+		}
+	}
 	return model;
 }

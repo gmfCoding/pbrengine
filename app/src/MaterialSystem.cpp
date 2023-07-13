@@ -98,11 +98,20 @@ Material * MaterialSystem::Copy(const std::string &name)
 
 void MaterialSystem::ApplyMaterial(Object &object, Material *material)
 {
-	material->properties.ApplyExtrinsic("MVP", Renderer::camera->preMultPV);
+	// TODO use if statements here maybe?
+	material->properties.ApplyExtrinsic("MVP", Renderer::camera->preMultPV * object.GetTransform());
+	material->properties.ApplyExtrinsic("viewPos", Renderer::camera->GetPosition());
+
+	material->properties.ApplyExtrinsic("proj", Renderer::camera->projection);
+	material->properties.ApplyExtrinsic("view", Renderer::camera->view);
+	material->properties.ApplyExtrinsic("model", glm::mat4(1) * object.GetTransform());
+	
 	material->properties.ApplyExtrinsic("FRAME", 0);
 
 	for (auto &&i : material->properties.properties)
 	{
-		
+		i.second.Apply();
 	}
+
+
 }
