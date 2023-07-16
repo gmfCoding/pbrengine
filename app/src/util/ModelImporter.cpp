@@ -12,6 +12,12 @@
 
 Model* ModelImporter::LoadModel(const char* fileLocation)
 {
+	std::vector<GPUIndex> vertexIndices, uvIndices, normalIndices;
+	std::vector<glm::vec3> temp_vertices;
+	std::vector<glm::vec2> temp_uvs;
+	std::vector<glm::vec3> temp_normals;
+	std::unordered_map<GPUIndex, GPUIndex> vertexToNormal;
+
 	FILE* file;
 	fopen_s(&file, fileLocation, "r");
 	if (file == NULL) {
@@ -44,7 +50,6 @@ Model* ModelImporter::LoadModel(const char* fileLocation)
 			temp_normals.push_back(normal);
 		}
 		else if (strcmp(lineHeader, "f") == 0) {
-			static std::string vertex1, vertex2, vertex3;
 			static GPUIndex vertexIndex[3], uvIndex[3], normalIndex[3];
 						
 			int matches = fscanf(file, "%u/%u/%u %u/%u/%u %u/%u/%u\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
@@ -54,9 +59,9 @@ Model* ModelImporter::LoadModel(const char* fileLocation)
 			}
 			else
 			{
-				vertexToNormal.emplace(vertexIndex[0], normalIndex[0]);
-				vertexToNormal.emplace(vertexIndex[1], normalIndex[1]);
-				vertexToNormal.emplace(vertexIndex[2], normalIndex[2]);
+				vertexToNormal[vertexIndex[0]] = normalIndex[0];
+				vertexToNormal[vertexIndex[1]] = normalIndex[1];
+				vertexToNormal[vertexIndex[2]] = normalIndex[2];
 
 				vertexIndices.push_back(vertexIndex[0]);
 				vertexIndices.push_back(vertexIndex[1]);
@@ -95,7 +100,7 @@ Model* ModelImporter::LoadModel(const char* fileLocation)
 	{
 		for (size_t i = 0; i < model->vertices.size(); i++)
 		{
-			model->normals.push_back(temp_normals[this->vertexToNormal[i + 1] - 1]);
+			model->normals.push_back(temp_normals[vertexToNormal[i + 1] - 1]);
 		}
 	}
 	return model;

@@ -15,6 +15,10 @@ public:
 	Object* rounded;
 	Object* plane;
 
+	GizmoLine* line1;
+    GizmoLine* line2;
+    GizmoLine* line3;
+
 	std::vector<Object*> objects;
 	Object* light;
 	GPUManager* gpuman;

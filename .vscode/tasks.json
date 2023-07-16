@@ -4,6 +4,11 @@
         {
             "label": "Generate Cmake",
             "type": "shell",
+            "options": {
+                "shell": {"executable": "cmd.exe", "args": ["/C"]},
+
+
+            },
             "command": "cmake",
             "args": [
                 {
@@ -16,6 +21,9 @@
         {
             "label": "Generate Cmake Debug",
             "type": "shell",
+            "options": {
+                "shell": {"executable": "cmd.exe", "args": ["/C"]}
+            },
             "command": "cmake",
             "args": [
                 {
@@ -28,6 +36,9 @@
         {
             "label": "Build Cmake",
             "type": "shell",
+            "options": {
+                "shell": {"executable": "cmd.exe", "args": ["/C"]}
+            },
             "command": "cmake --build build",
             "problemMatcher": []
         },
@@ -40,6 +51,9 @@
         {
             "label": "Build and Run Project",
             "type": "shell",
+            "options": {
+                "shell": {"executable": "cmd.exe", "args": ["/C"]}
+            },
             "command": "exit",
             "dependsOrder": "sequence",
             "dependsOn": [

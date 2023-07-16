@@ -76,7 +76,8 @@ void Engine::LoadMaterials()
 		{	
 			{"objectColor", Matprop::FLOAT3, glm::vec3()}, 
 			{"lightColor", Matprop::FLOAT3, glm::vec3(1.0, 1.0, 1.0)},
-			{"lightPos", Matprop::FLOAT3, glm::vec3(1.0)}
+			{"lightPos", Matprop::FLOAT3, glm::vec3(1.0)},
+			{"debug", Matprop::INT1, 0}
 		},
 		{ MATP_MVP_SPLIT, MATP_VIEWPOS });
 

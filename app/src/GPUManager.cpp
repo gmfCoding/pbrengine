@@ -12,6 +12,7 @@ GPUMesh* GPUManager::GetMesh(std::string const &str)
 
 GPUMesh* GPUManager::AddMesh(std::string const &name, GPUMesh *mesh)
 {
+	std::cout << "Tracking new GPUMesh: \"" << name << "\" at VAO:" << mesh->GetSpec().vao << std::endl;
 	this->meshes.emplace(name, mesh);
 	return this->meshes[name];
 }
@@ -26,7 +27,6 @@ GPUMesh* GPUManager::CreateMesh(std::string const &name, Model *model)
 	auto m = new Mesh();
 	model->SetMesh(m);
 	auto gm = AddMesh(name, new GPUMesh(m));
-	std::cout << "Tracking new GPUMesh: \"" << name << "\" at VAO:" << gm->GetSpec().vao << std::endl;
 	delete m;
 	return gm;
 }

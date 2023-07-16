@@ -18,8 +18,40 @@
 ShadowtestApp::ShadowtestApp()
 {
 
+	
+
 }
 
+
+// Mesh *TinyObjWrapper(const std::string &model)
+// {
+// 	tinyobj::attrib_t inatrib;
+// 	std::vector<tinyobj::shape_t> shape;
+// 	std::vector<tinyobj::material_t> mat;
+	
+// 	std::string warn;
+//     std::string err;
+// 	tinyobj::LoadObj(&inatrib, &shape, nullptr, &warn, getAssetPath({"models", model}).c_str(), getAssetPath({"models"}).c_str(), true);
+// 	 if (!warn.empty()) {
+//       std::cerr << "WARN:" << warn << std::endl;
+//     }
+//     if (!err.empty()) {
+//       std::cerr << err << std::endl;
+//     }
+
+// 	Mesh *mesh = new Mesh();
+// 	for (size_t i = 0; i < inatrib.vertices.size(); i += 3)
+// 	{
+// 		mesh->vertices.push_back(glm::vec3(inatrib.vertices[i], inatrib.vertices[i + 1], inatrib.vertices[i+2]));
+// 		mesh->normals.push_back(glm::vec3(inatrib.normals[i], inatrib.normals[i + 1], inatrib.normals[i+2]));
+// 	}
+// 	for (size_t i = 0; i < shape[0].mesh.indices.size(); i++)
+// 	{
+// 		mesh->indices.push_back(shape[0].mesh.indices[i].vertex_index);
+// 	}
+	
+// 	return mesh;
+// }
 
 Object *CreateNewObject(std::string const &model, glm::vec3 pos, glm::vec3 color, GPUManager *gpuman)
 {
@@ -43,6 +75,13 @@ void ShadowtestApp::Setup()
 	Model* model4 = importer->LoadModel(getAssetPath({"models", "cube_split.obj"}).c_str());
 	Model* model5 = importer->LoadModel(getAssetPath({"models", "cube_rounded.obj"}).c_str());
 
+	line1 = new GizmoLine(glm::vec3(0,0,0), glm::vec3(1,0,0));
+	line2 = new GizmoLine(glm::vec3(0,0,0), glm::vec3(0,1,0));
+	line3 = new GizmoLine(glm::vec3(0,0,0), glm::vec3(0,0,1));
+	line1->setColor(glm::vec3(1,0,0) + glm::vec3(0));
+	line2->setColor(glm::vec3(0,1,0) + glm::vec3(0));
+	line3->setColor(glm::vec3(0,0,1) + glm::vec3(0));
+
 	gpuman = new GPUManager();
 
 	gpuman->CreateMesh("plane", model);
@@ -53,7 +92,7 @@ void ShadowtestApp::Setup()
 
 	this->light = new LightSource();
 	light->renderer = new MeshRenderer(MaterialSystem::materialMap["lit_source"], *light, gpuman->GetMesh("uvsphere"));
-	light->SetPosition(glm::vec3(-3, 2, 1));
+	light->SetPosition(glm::vec3(-3, 2, 1));	
 
 	this->crate = CreateNewObject("cube_flat", glm::vec3(3.0,  0.0, 7.0), glm::vec3(1.0, 1.0, 0.0), gpuman);
 	this->plane = CreateNewObject("plane", glm::vec3(6.0, 0.0, -1.0),  glm::vec3(1.0, 1.0, 1.0), gpuman);
@@ -71,7 +110,13 @@ void ShadowtestApp::Update()
 
 	angle += currentEngine->deltaTime;
 
+	line1->setMVP(Renderer::camera->projection * Renderer::camera->view);
+	line2->setMVP(Renderer::camera->projection * Renderer::camera->view);
+	line3->setMVP(Renderer::camera->projection * Renderer::camera->view);
 
+	line1->draw(Renderer::camera);
+	line2->draw(Renderer::camera);
+	line3->draw(Renderer::camera);
 
 	float angleX = sin(angle);
 	float angleY = cos(angle * 0.5);

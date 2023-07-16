@@ -65,7 +65,7 @@ void Matprop::ApplyOverride(std::any gl_case_value)
 		return;
 	switch (type)
 	{
-		GLCase(BOOL, GLboolean, glUniform1ui);
+		GLCase(BOOL, GLuint, glUniform1ui);
 
 		GLCase(INT1, GLint, glUniform1i);
 		GLCaseV(INT2, glm::ivec2, glUniform2iv);
